@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Student Innovation — Smart Education</title>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+<style>
+/* ═══════════════════════════════════════════════
+   SMART EDU — GLOBAL STYLES & VARIABLES
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --primary: #6c5ce7;
+  --primary-light: #a29bfe;
+  --primary-dark: #5341d6;
+  --secondary: #00b894;
+  --accent-orange: #e17055;
+  --accent-yellow: #fdcb6e;
+  --accent-pink: #fd79a8;
+  --accent-blue: #0984e3;
+  --bg: #f8f9ff;
+  --bg-card: #ffffff;
+  --bg-section-alt: #f0f1ff;
+  --text: #2d3436;
+  --text-secondary: #636e72;
+  --text-muted: #b2bec3;
+  --border: #e0e0ef;
+  --gradient-primary: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  --gradient-secondary: linear-gradient(135deg, #00b894, #00cec9);
+  --gradient-warm: linear-gradient(135deg, #e17055, #fdcb6e);
+  --gradient-hero: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  --nav-height: 72px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --container-max: 1240px;
+  --shadow-sm: 0 2px 8px rgba(108,92,231,0.08);
+  --shadow-md: 0 8px 30px rgba(108,92,231,0.12);
+  --shadow-lg: 0 20px 60px rgba(108,92,231,0.18);
+  --shadow-glow: 0 0 30px rgba(108,92,231,0.25);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #0f0e17;
+  --bg-card: #1a1a2e;
+  --bg-section-alt: #16152b;
+  --text: #fffffe;
+  --text-secondary: #a7a9be;
+  --text-muted: #555770;
+  --border: #2a2a4a;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 8px 30px rgba(0,0,0,0.4);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 30px rgba(108,92,231,0.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-height); }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.7; overflow-x: hidden;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
+}
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 24px; }
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.accent { color: var(--primary); }
+
+/* ═══════ PRELOADER ═══════ */
+#preloader {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--gradient-hero);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.6s, visibility 0.6s;
+}
+#preloader.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader { position: relative; width: 120px; height: 120px; }
+.loader-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 3px solid transparent; border-top-color: var(--primary-light);
+}
+.loader-ring:nth-child(1) { animation: spin 1.2s linear infinite; }
+.loader-ring:nth-child(2) { inset: 10px; border-top-color: var(--secondary); animation: spin 1.8s linear infinite reverse; }
+.loader-ring:nth-child(3) { inset: 20px; border-top-color: var(--accent-orange); animation: spin 2.4s linear infinite; }
+.loader-text {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; color: #fff; letter-spacing: 1px;
+}
+.loader-text span { color: var(--accent-yellow); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════ CURSOR GLOW ═══════ */
+.cursor-glow {
+  position: fixed; width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(108,92,231,0.08) 0%, transparent 70%);
+  pointer-events: none; z-index: 0; transform: translate(-50%,-50%);
+  transition: transform 0.1s ease-out;
+}
+[data-theme="dark"] .cursor-glow {
+  background: radial-gradient(circle, rgba(108,92,231,0.15) 0%, transparent 70%);
+}
+
+/* ═══════ NAVBAR ═══════ */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--nav-height);
+  z-index: 1000; background: rgba(248,249,255,0.85);
+  backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--border); transition: all 0.3s var(--ease);
+}
+[data-theme="dark"] .navbar { background: rgba(15,14,23,0.85); }
+.navbar.scrolled { box-shadow: var(--shadow-sm); }
+.nav-container {
+  max-width: var(--container-max); margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; height: 100%;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px;
+}
+.logo-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: var(--gradient-primary);
+  display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px;
+}
+.nav-links { display: flex; gap: 8px; }
+.nav-links a {
+  padding: 8px 16px; border-radius: var(--radius-xs);
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  transition: all 0.25s var(--ease); position: relative;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--primary); background: rgba(108,92,231,0.08); }
+.nav-actions { display: flex; align-items: center; gap: 12px; }
+.theme-toggle {
+  width: 40px; height: 40px; border-radius: 50%; border: none;
+  background: var(--bg-section-alt); color: var(--text-secondary);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: all 0.3s var(--ease);
+}
+.theme-toggle:hover { color: var(--primary); transform: rotate(20deg); }
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.hamburger span {
+  width: 24px; height: 2px; background: var(--text);
+  border-radius: 2px; transition: all 0.3s var(--ease);
+}
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+/* ═══════ BUTTONS ═══════ */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600; border: 2px solid transparent;
+  cursor: pointer; transition: all 0.3s var(--ease); font-family: inherit;
+}
+.btn-primary {
+  background: var(--gradient-primary); color: #fff; border-color: transparent;
+  box-shadow: 0 4px 15px rgba(108,92,231,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(108,92,231,0.4); }
+.btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
+.btn-outline:hover { background: var(--primary); color: #fff; }
+.btn-sm { padding: 8px 18px; font-size: 13px; }
+.btn-lg { padding: 14px 32px; font-size: 15px; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* ═══════ SECTION HEADERS ═══════ */
+.section-header { text-align: center; margin-bottom: 60px; }
+.section-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(108,92,231,0.1); color: var(--primary);
+  padding: 6px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; margin-bottom: 16px;
+}
+.section-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(28px, 5vw, 42px); font-weight: 700; margin-bottom: 12px;
+}
+.section-header p { color: var(--text-secondary); max-width: 560px; margin: 0 auto; font-size: 16px; }
+
+/* ═══════ HERO ═══════ */
+.hero {
+  position: relative; min-height: 100vh; overflow: hidden;
+  padding: calc(var(--nav-height) + 60px) 0 120px;
+  background: var(--gradient-hero); display: flex; align-items: center;
+}
+.hero-bg-shapes { position: absolute; inset: 0; overflow: hidden; }
+.shape { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3; }
+.shape-1 { width: 500px; height: 500px; background: #6c5ce7; top: -10%; left: -5%; animation: float 8s ease-in-out infinite; }
+.shape-2 { width: 400px; height: 400px; background: #00b894; bottom: -10%; right: -5%; animation: float 10s ease-in-out infinite reverse; }
+.shape-3 { width: 300px; height: 300px; background: #e17055; top: 30%; left: 40%; animation: float 12s ease-in-out infinite; }
+.shape-4 { width: 200px; height: 200px; background: #fd79a8; top: 10%; right: 20%; animation: float 9s ease-in-out infinite reverse; }
+.shape-5 { width: 250px; height: 250px; background: #fdcb6e; bottom: 20%; left: 20%; animation: float 11s ease-in-out infinite; }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+.hero-particles { position: absolute; inset: 0; overflow: hidden; }
+.particle {
+  position: absolute; width: 4px; height: 4px;
+  background: rgba(255,255,255,0.3); border-radius: 50%;
+  animation: particleFade 3s ease-in-out infinite;
+}
+@keyframes particleFade {
+  0%, 100% { opacity: 0; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-30px); }
+}
+.hero-content {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(253,203,110,0.15); color: var(--accent-yellow);
+  padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600;
+  margin-bottom: 20px; border: 1px solid rgba(253,203,110,0.3);
+}
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(36px, 6vw, 64px); font-weight: 800; line-height: 1.1;
+  color: #fff; margin-bottom: 20px;
+}
+.hero-subtitle {
+  color: rgba(255,255,255,0.75); font-size: 17px;
+  max-width: 520px; margin-bottom: 32px; line-height: 1.8;
+}
+.hero-subtitle strong { color: #fff; }
+.hero-cta { display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; }
+.hero-cta .btn-outline { color: #fff; border-color: rgba(255,255,255,0.3); }
+.hero-cta .btn-outline:hover { background: #fff; color: var(--primary); border-color: #fff; }
+.hero-stats { display: flex; gap: 40px; }
+.hero-stat { text-align: center; }
+.stat-number { display: block; font-family: 'Space Grotesk'; font-size: 32px; font-weight: 800; color: #fff; }
+.stat-suffix { font-family: 'Space Grotesk'; font-size: 24px; font-weight: 700; color: var(--accent-yellow); }
+.stat-label { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; display: block; }
+.hero-visual { position: relative; display: flex; justify-content: center; align-items: center; }
+.hero-card-stack { position: relative; width: 400px; height: 400px; }
+.floating-card {
+  position: absolute; padding: 14px 22px;
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2); border-radius: var(--radius-sm);
+  color: #fff; display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 600; animation: cardFloat 4s ease-in-out infinite; z-index: 3;
+}
+.floating-card i { font-size: 18px; }
+.card-1 { top: 20px; left: 0; animation-delay: 0s; }
+.card-2 { top: 50%; right: -20px; animation-delay: 1s; }
+.card-3 { bottom: 30px; left: 40px; animation-delay: 2s; }
+@keyframes cardFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.hero-illustration { position: absolute; inset: 40px; }
+.illustration-circle { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
+.center-icon {
+  width: 80px; height: 80px; border-radius: 50%; background: var(--gradient-primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; color: #fff; box-shadow: 0 0 40px rgba(108,92,231,0.5); z-index: 2;
+}
+.orbit { position: absolute; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.15); }
+.orbit-1 { width: 200px; height: 200px; animation: orbitSpin 12s linear infinite; }
+.orbit-2 { width: 260px; height: 260px; animation: orbitSpin 18s linear infinite reverse; }
+.orbit-3 { width: 320px; height: 320px; animation: orbitSpin 24s linear infinite; }
+.orbit-dot {
+  position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent-yellow); box-shadow: 0 0 10px rgba(253,203,110,0.6);
+}
+.orbit-2 .orbit-dot { background: var(--secondary); box-shadow: 0 0 10px rgba(0,184,148,0.6); }
+.orbit-3 .orbit-dot { background: var(--accent-pink); box-shadow: 0 0 10px rgba(253,121,168,0.6); }
+@keyframes orbitSpin { to { transform: rotate(360deg); } }
+.hero-wave { position: absolute; bottom: -2px; left: 0; right: 0; }
+.hero-wave svg { width: 100%; height: 120px; display: block; }
+.hero-wave path { fill: var(--bg); transition: fill 0.4s var(--ease); }
+
+/* ═══════ MARQUEE ═══════ */
+.marquee-section { background: var(--gradient-primary); padding: 18px 0; overflow: hidden; }
+.marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+.marquee-content { display: flex; gap: 40px; align-items: center; padding: 0 20px; }
+.marquee-content span { white-space: nowrap; color: #fff; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.marquee-content i { font-size: 10px; color: var(--accent-yellow); }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ═══════ FEATURES ═══════ */
+.features { padding: 100px 0; }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.feature-card {
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 36px 28px; border: 1px solid var(--border);
+  transition: all 0.4s var(--ease); position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+  background: var(--gradient-primary); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.feature-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+.feature-card:hover::before { transform: scaleX(1); }
+.feature-icon {
+  width: 56px; height: 56px; border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent); display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px;
+}
+.feature-card h3 { font-family: 'Space Grotesk'; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.feature-card p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; margin-bottom: 16px; }
+.feature-tag {
+  display: inline-block; padding: 4px 12px; border-radius: 50px;
+  font-size: 11px; font-weight: 600; background: rgba(108,92,231,0.08); color: var(--primary);
+}
+
+/* ═══════ HOW IT WORKS ═══════ */
+.how-it-works { padding: 100px 0; background: var(--bg-section-alt); }
+.steps-timeline { position: relative; max-width: 800px; margin: 0 auto; }
+.timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; background: var(--border); transform: translateX(-50%); }
+.step { display: flex; gap: 30px; margin-bottom: 50px; position: relative; }
+.step:nth-child(odd) { flex-direction: row-reverse; text-align: right; }
+.step-number {
+  position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--gradient-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk'; font-weight: 700; font-size: 16px;
+  z-index: 2; box-shadow: var(--shadow-glow);
+}
+.step-content {
+  width: 44%; padding: 24px; background: var(--bg-card);
+  border-radius: var(--radius); border: 1px solid var(--border);
+  transition: all 0.3s var(--ease);
+}
+.step-content:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
+.step-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(108,92,231,0.1); color: var(--primary);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 12px;
+}
+.step:nth-child(odd) .step-icon { margin-left: auto; }
+.step-content h3 { font-family: 'Space Grotesk'; font-weight: 700; font-size: 18px; margin-bottom: 8px; }
+.step-content p { color: var(--text-secondary); font-size: 14px; }
+
+/* ═══════ COURSES ═══════ */
+.courses { padding: 100px 0; }
+.course-filters { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+.filter-btn {
+  padding: 8px 22px; border-radius: 50px; border: 2px solid var(--border);
+  background: transparent; color: var(--text-secondary);
+  font-weight: 600; font-size: 13px; cursor: pointer;
+  transition: all 0.3s var(--ease); font-family: inherit;
+}
+.filter-btn:hover, .filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.courses-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.course-card {
+  background: var(--bg-card); border-radius: var(--radius);
+  overflow: hidden; border: 1px solid var(--border); transition: all 0.4s var(--ease);
+}
+.course-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+.course-card.hidden { display: none; }
+.course-banner {
+  height: 160px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.course-banner-icon { font-size: 56px; color: rgba(255,255,255,0.25); }
+.course-level {
+  position: absolute; top: 12px; right: 12px; padding: 4px 14px; border-radius: 50px;
+  background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
+  color: #fff; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.course-body { padding: 22px; }
+.course-meta { display: flex; gap: 16px; margin-bottom: 12px; }
+.course-meta span { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+.course-body h3 { font-family: 'Space Grotesk'; font-size: 17px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+.course-body p { color: var(--text-secondary); font-size: 13px; margin-bottom: 16px; line-height: 1.6; }
+.course-footer { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.course-rating { display: flex; align-items: center; gap: 4px; }
+.course-rating i { color: var(--accent-yellow); font-size: 12px; }
+.course-rating span { font-weight: 700; font-size: 14px; margin-left: 4px; }
+.course-price { font-weight: 800; font-size: 18px; color: var(--secondary); }
+
+/* ═══════ INTERACTIVE TOOLS ═══════ */
+.tools-section { padding: 100px 0; background: var(--bg-section-alt); }
+.tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; max-width: 900px; margin: 0 auto; }
+.tool-card {
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 28px; border: 1px solid var(--border); transition: all 0.3s var(--ease);
+}
+.tool-card:hover { box-shadow: var(--shadow-md); }
+.tool-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.tool-header i {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--gradient-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.tool-header h3 { font-family: 'Space Grotesk'; font-weight: 700; font-size: 17px; }
+
+/* Quiz */
+.quiz-progress { width: 100%; height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 12px; }
+.quiz-progress-bar { height: 100%; border-radius: 3px; background: var(--gradient-primary); transition: width 0.4s var(--ease); width: 20%; }
+.quiz-counter { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+.quiz-question { font-weight: 600; font-size: 15px; margin-bottom: 16px; min-height: 44px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  padding: 12px 16px; border-radius: var(--radius-xs);
+  border: 2px solid var(--border); cursor: pointer;
+  font-size: 14px; transition: all 0.25s var(--ease);
+  font-family: inherit; background: transparent; text-align: left; color: var(--text);
+}
+.quiz-option:hover { border-color: var(--primary); background: rgba(108,92,231,0.05); }
+.quiz-option.correct { border-color: var(--secondary); background: rgba(0,184,148,0.1); color: var(--secondary); }
+.quiz-option.wrong { border-color: #d63031; background: rgba(214,48,49,0.1); color: #d63031; }
+.quiz-result { text-align: center; padding: 20px 0; }
+.result-circle { width: 120px; height: 120px; margin: 0 auto 20px; position: relative; }
+.result-circle svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.result-bg { fill: none; stroke: var(--border); stroke-width: 2.5; }
+.result-fill { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-linecap: round; transition: stroke-dasharray 1s var(--ease); }
+.result-percent {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk'; font-weight: 800; font-size: 28px; color: var(--primary);
+}
+.quiz-result p { color: var(--text-secondary); margin-bottom: 16px; }
+
+/* Pomodoro */
+.pomodoro-container { text-align: center; }
+.pomodoro-display { position: relative; width: 180px; height: 180px; margin: 0 auto 20px; }
+.pomodoro-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--border); stroke-width: 6; }
+.ring-fill { fill: none; stroke-width: 6; stroke-linecap: round; stroke-dasharray: 565.48; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; stroke: var(--primary); }
+.pomodoro-time {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk'; font-weight: 800; font-size: 36px;
+}
+.pomodoro-modes { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+.pomo-mode {
+  padding: 6px 16px; border-radius: 50px; border: 2px solid var(--border);
+  background: transparent; color: var(--text-secondary); font-size: 12px;
+  font-weight: 600; cursor: pointer; transition: all 0.3s var(--ease); font-family: inherit;
+}
+.pomo-mode.active, .pomo-mode:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.pomodoro-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
+.pomodoro-sessions { font-size: 13px; color: var(--text-muted); }
+
+
+/* ═══════ STATS ═══════ */
+.stats-section { padding: 80px 0; background: var(--gradient-hero); }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; text-align: center; }
+.stat-item { color: #fff; }
+.stat-icon {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
+  background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.stat-value { font-family: 'Space Grotesk'; font-size: 40px; font-weight: 800; margin-bottom: 4px; }
+.stat-name { font-size: 14px; color: rgba(255,255,255,0.65); }
+
+/* ═══════ TESTIMONIALS ═══════ */
+.testimonials { padding: 100px 0; }
+.testimonial-slider { position: relative; max-width: 640px; margin: 0 auto; min-height: 280px; }
+.testimonial-card {
+  position: absolute; inset: 0; background: var(--bg-card); border-radius: var(--radius);
+  padding: 36px; border: 1px solid var(--border);
+  opacity: 0; transform: translateX(60px); transition: all 0.5s var(--ease); pointer-events: none;
+}
+.testimonial-card.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+.testimonial-stars { margin-bottom: 16px; }
+.testimonial-stars i { color: var(--accent-yellow); font-size: 16px; }
+.testimonial-card > p { font-size: 16px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 14px; }
+.author-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 16px;
+}
+.testimonial-author strong { display: block; font-size: 15px; }
+.testimonial-author span { font-size: 13px; color: var(--text-muted); }
+.testimonial-dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
+.dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--primary); background: transparent; cursor: pointer; transition: all 0.3s;
+}
+.dot.active { background: var(--primary); width: 28px; border-radius: 5px; }
+
+/* ═══════ PRICING ═══════ */
+.pricing { padding: 100px 0; background: var(--bg-section-alt); }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 960px; margin: 0 auto; }
+.pricing-card {
+  background: var(--bg-card); border-radius: var(--radius); padding: 36px 28px;
+  border: 1px solid var(--border); text-align: center; position: relative; transition: all 0.4s var(--ease);
+}
+.pricing-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+.pricing-card.featured { border-color: var(--primary); box-shadow: var(--shadow-glow); transform: scale(1.05); }
+.pricing-card.featured:hover { transform: scale(1.05) translateY(-8px); }
+.pricing-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--gradient-warm); color: #fff;
+  padding: 4px 20px; border-radius: 50px; font-size: 12px; font-weight: 700;
+}
+.pricing-header h3 { font-family: 'Space Grotesk'; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.pricing-amount { font-family: 'Space Grotesk'; font-size: 48px; font-weight: 800; margin-bottom: 24px; }
+.currency { font-size: 24px; vertical-align: super; }
+.period { font-size: 16px; font-weight: 400; color: var(--text-muted); }
+.pricing-features { margin-bottom: 28px; }
+.pricing-features li {
+  padding: 8px 0; font-size: 14px; color: var(--text-secondary);
+  display: flex; align-items: center; gap: 10px; justify-content: center;
+}
+.pricing-features li i { font-size: 12px; }
+.pricing-features li:not(.disabled) i { color: var(--secondary); }
+.pricing-features li.disabled { color: var(--text-muted); }
+.pricing-features li.disabled i { color: var(--text-muted); }
+
+/* ═══════ NEWSLETTER ═══════ */
+.newsletter { padding: 100px 0; }
+.newsletter-content {
+  background: var(--gradient-hero); border-radius: var(--radius);
+  padding: 60px 48px; text-align: center; position: relative; overflow: hidden;
+}
+.newsletter-content::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
+}
+.newsletter-text { position: relative; z-index: 2; }
+.newsletter-text h2 { color: #fff; font-family: 'Space Grotesk'; font-size: clamp(24px, 4vw, 36px); margin-bottom: 12px; }
+.newsletter-text p { color: rgba(255,255,255,0.7); max-width: 500px; margin: 0 auto 28px; }
+.newsletter-form { position: relative; z-index: 2; }
+.form-group-inline { display: flex; gap: 12px; max-width: 600px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+.form-group-inline input {
+  flex: 1; min-width: 180px; padding: 14px 18px;
+  border: 2px solid rgba(255,255,255,0.2); border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.1); color: #fff; font-size: 14px; font-family: inherit; backdrop-filter: blur(8px);
+}
+.form-group-inline input::placeholder { color: rgba(255,255,255,0.5); }
+.form-group-inline input:focus { border-color: var(--accent-yellow); outline: none; }
+.form-note { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 12px; position: relative; z-index: 2; }
+.signup-success { text-align: center; color: #fff; position: relative; z-index: 2; }
+.signup-success i { font-size: 48px; color: var(--secondary); margin-bottom: 12px; display: block; }
+.signup-success p { font-size: 16px; }
+
+/* ═══════ CONTACT ═══════ */
+.contact { padding: 100px 0; background: var(--bg-section-alt); }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: start; }
+.contact-info { display: flex; flex-direction: column; gap: 28px; }
+.contact-item { display: flex; gap: 16px; }
+.contact-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: rgba(108,92,231,0.1); color: var(--primary);
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.contact-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.contact-item p { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+.contact-socials { display: flex; gap: 12px; margin-top: 8px; }
+.contact-socials a {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--bg-card); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 16px; transition: all 0.3s var(--ease);
+}
+.contact-socials a:hover { background: var(--primary); color: #fff; border-color: var(--primary); transform: translateY(-3px); }
+.contact-form {
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 36px; border: 1px solid var(--border);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 12px 16px; border: 2px solid var(--border);
+  border-radius: var(--radius-xs); font-size: 14px; font-family: inherit;
+  background: var(--bg); color: var(--text); transition: border-color 0.3s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); outline: none; }
+.form-group textarea { resize: vertical; }
+
+/* ═══════ FOOTER ═══════ */
+.footer { background: var(--gradient-hero); color: #fff; padding: 60px 0 0; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+.footer-brand p { color: rgba(255,255,255,0.6); font-size: 14px; margin: 16px 0; max-width: 300px; }
+.footer-socials { display: flex; gap: 10px; }
+.footer-socials a {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); display: flex;
+  align-items: center; justify-content: center; color: #fff; font-size: 14px; transition: all 0.3s var(--ease);
+}
+.footer-socials a:hover { background: var(--primary); transform: translateY(-3px); }
+.footer-links h4 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+.footer-links li { margin-bottom: 10px; }
+.footer-links a { font-size: 14px; color: rgba(255,255,255,0.6); transition: color 0.3s; }
+.footer-links a:hover { color: #fff; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding: 20px 0; text-align: center; font-size: 13px; color: rgba(255,255,255,0.5); }
+
+/* ═══════ BACK TO TOP ═══════ */
+.back-to-top {
+  position: fixed; bottom: 30px; right: 30px;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--gradient-primary); color: #fff; border: none; font-size: 18px; cursor: pointer;
+  box-shadow: var(--shadow-md);
+  opacity: 0; visibility: hidden; transform: translateY(20px);
+  transition: all 0.4s var(--ease); z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+}
+.back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.back-to-top:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+/* ═══════ RESPONSIVE ═══════ */
+@media (max-width: 1024px) {
+  .features-grid, .courses-grid, .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  .pricing-card.featured { transform: scale(1); }
+  .hero-content { grid-template-columns: 1fr; text-align: center; }
+  .hero-subtitle { margin: 0 auto 32px; }
+  .hero-cta { justify-content: center; }
+  .hero-stats { justify-content: center; }
+  .hero-visual { display: none; }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+}
+@media (max-width: 768px) {
+  .nav-links {
+    display: none; position: fixed; top: var(--nav-height);
+    left: 0; right: 0; background: var(--bg-card);
+    flex-direction: column; padding: 20px;
+    border-bottom: 1px solid var(--border); box-shadow: var(--shadow-md);
+  }
+  .nav-links.open { display: flex; }
+  .hamburger { display: flex; }
+  .features-grid, .courses-grid, .tools-grid, .pricing-grid, .stats-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .steps-timeline { padding: 0 20px; }
+  .timeline-line { left: 24px; }
+  .step, .step:nth-child(odd) { flex-direction: column; text-align: left; padding-left: 60px; }
+  .step-number { left: 0; transform: none; }
+  .step-content { width: 100%; }
+  .step:nth-child(odd) .step-icon { margin-left: 0; }
+  .cursor-glow { display: none; }
+}
+@media (max-width: 480px) {
+  .hero h1 { font-size: 32px; }
+  .hero-stats { flex-direction: column; gap: 20px; }
+  .form-group-inline { flex-direction: column; }
+  .form-group-inline input { min-width: auto; }
+}
+</style>
+<style>/* icon fallback (icon-font CDN not available when hosted) */.fa,.fas,.far,.fab{font-style:normal;display:inline-block;line-height:1;font-family:inherit}
+.fa-atom::before{content:"⚛️"}
+.fa-book::before{content:"📕"}
+.fa-book-open::before{content:"📖"}
+.fa-brain::before{content:"🧠"}
+.fa-calculator::before{content:"🧮"}
+.fa-certificate::before{content:"📜"}
+.fa-chalkboard-teacher::before{content:"👩‍🏫"}
+.fa-chart-bar::before{content:"📊"}
+.fa-chart-line::before{content:"📈"}
+.fa-chart-pie::before{content:"📊"}
+.fa-check::before{content:"✓"}
+.fa-check-circle::before{content:"✅"}
+.fa-chevron-up::before{content:"⌃"}
+.fa-clock::before{content:"🕒"}
+.fa-code::before{content:"💻"}
+.fa-cogs::before{content:"⚙️"}
+.fa-comments::before{content:"💬"}
+.fa-compass::before{content:"🧭"}
+.fa-dna::before{content:"🧬"}
+.fa-envelope::before{content:"✉️"}
+.fa-gamepad::before{content:"🎮"}
+.fa-gem::before{content:"💎"}
+.fa-github::before{content:"🐙"}
+.fa-globe-asia::before{content:"🌏"}
+.fa-graduation-cap::before{content:"🎓"}
+.fa-heart::before{content:"❤️"}
+.fa-instagram::before{content:"📷"}
+.fa-laptop-code::before{content:"💻"}
+.fa-lightbulb::before{content:"💡"}
+.fa-linkedin-in::before{content:"in"}
+.fa-lock::before{content:"🔒"}
+.fa-map-marker-alt::before{content:"📍"}
+.fa-mobile-alt::before{content:"📱"}
+.fa-moon::before{content:"🌙"}
+.fa-palette::before{content:"🎨"}
+.fa-paper-plane::before{content:"✈️"}
+.fa-pause::before{content:"⏸"}
+.fa-phone-alt::before{content:"📞"}
+.fa-play::before{content:"▶"}
+.fa-play-circle::before{content:"▶️"}
+.fa-plus::before{content:"+"}
+.fa-question-circle::before{content:"❓"}
+.fa-redo::before{content:"↻"}
+.fa-robot::before{content:"🤖"}
+.fa-rocket::before{content:"🚀"}
+.fa-star::before{content:"★"}
+.fa-star-half-alt::before{content:"⯪"}
+.fa-stopwatch::before{content:"⏱️"}
+.fa-sun::before{content:"☀️"}
+.fa-tags::before{content:"🏷️"}
+.fa-times::before{content:"✕"}
+.fa-tools::before{content:"🛠️"}
+.fa-trash::before{content:"🗑️"}
+.fa-trophy::before{content:"🏆"}
+.fa-twitter::before{content:"🐦"}
+.fa-user-plus::before{content:"👤"}
+.fa-users::before{content:"👥"}
+.fa-video::before{content:"🎥"}
+.fa-youtube::before{content:"▶"}
+</style>
+<style>
+[data-aos]{opacity:0;transition:opacity .7s ease,transform .7s ease}
+[data-aos="fade-up"]{transform:translateY(28px)}
+[data-aos="fade-left"]{transform:translateX(36px)}
+[data-aos="fade-right"]{transform:translateX(-36px)}
+[data-aos="zoom-in"]{transform:scale(.92)}
+[data-aos].aos-animate{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){[data-aos]{opacity:1;transform:none;transition:none}}
+.quiz-option,.btn,.filter-btn,.pomo-mode,.dot{touch-action:manipulation}
+</style>
+<style>
+.cm-overlay{position:fixed;inset:0;z-index:100000;background:rgba(10,10,25,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+.cm-overlay[hidden]{display:none}
+.cm-box{position:relative;background:var(--bg-card);color:var(--text);width:100%;max-width:720px;max-height:100%;overflow-y:auto;border-radius:var(--radius);box-shadow:0 20px 60px rgba(0,0,0,.35);animation:fadeIn .25s ease;outline:none}
+.cm-close{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.35);color:#fff;font-size:18px;cursor:pointer;z-index:2}
+.cm-close:hover,.cm-close:focus-visible{background:rgba(0,0,0,.6)}
+.cm-banner{height:130px;display:flex;align-items:center;justify-content:center}
+.cm-banner i{font-size:64px;color:rgba(255,255,255,.35)}
+.cm-content{padding:26px 28px 30px}
+.cm-meta{font-size:13px;color:var(--text-secondary);margin-bottom:6px}
+.cm-content h3{font-family:'Space Grotesk',sans-serif;font-size:26px;line-height:1.25;margin-bottom:10px}
+.cm-content h4{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:22px 0 8px;color:var(--primary)}
+.cm-content p{color:var(--text-secondary);line-height:1.75;font-size:15px}
+.cm-content ul{margin:0;padding-left:20px;color:var(--text-secondary);line-height:1.75;font-size:15px}
+.cm-path{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px;counter-reset:s}
+.cm-path li{counter-increment:s;background:rgba(108,92,231,.1);color:var(--text);border-radius:999px;padding:6px 14px;font-size:13px}
+.cm-path li::before{content:counter(s) ". ";font-weight:700;color:var(--primary)}
+.cm-links{display:grid;gap:10px}
+.cm-links a{display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--border);border-radius:12px;color:var(--text);text-decoration:none;font-size:14px;font-weight:600;transition:.2s}
+.cm-links a span{flex:1}
+.cm-links a em{font-style:normal;color:var(--primary);font-size:13px}
+.cm-links a:hover,.cm-links a:focus-visible{border-color:var(--primary);background:rgba(108,92,231,.08);transform:translateY(-2px)}
+.cm-note{font-size:12px!important;margin-top:14px;color:var(--text-muted)!important}
+body.modal-open{overflow:hidden}
+.course-card:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+@media(max-width:600px){.cm-content{padding:20px 18px 24px}.cm-content h3{font-size:22px}.cm-banner{height:100px}}
+</style>
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="loader">
+      <div class="loader-ring"></div>
+      <div class="loader-ring"></div>
+      <div class="loader-ring"></div>
+      <span class="loader-text">Smart<span>Edu</span></span>
+    </div>
+  </div>
+
+  <!-- CURSOR GLOW -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+        <span>Smart<span class="accent">Edu</span></span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme"><i class="fas fa-moon"></i></button>
+        <a href="#signup" class="btn btn-primary btn-sm">Get Started</a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg-shapes">
+      <div class="shape shape-1"></div><div class="shape shape-2"></div>
+      <div class="shape shape-3"></div><div class="shape shape-4"></div><div class="shape shape-5"></div>
+    </div>
+    <div class="hero-particles" id="particles"></div>
+    <div class="container hero-content">
+      <div class="hero-text" data-aos="fade-right" data-aos-duration="1000">
+        <div class="hero-badge"><i class="fas fa-rocket"></i> #1 Smart Learning Platform</div>
+        <h1>Student <span class="gradient-text">Innovation</span><br />Smart Education</h1>
+        <p class="hero-subtitle">A revolutionary concept that describes learning in the digital age. Learn more <strong>effectively</strong>, <strong>efficiently</strong>, <strong>flexibly</strong>, and <strong>comfortably</strong> — anywhere, anytime.</p>
+        <div class="hero-cta">
+          <a href="#courses" class="btn btn-primary btn-lg"><i class="fas fa-play-circle"></i> Start Learning</a>
+          <a href="#features" class="btn btn-outline btn-lg"><i class="fas fa-compass"></i> Explore Features</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><span class="stat-number" data-count="50000">0</span><span class="stat-suffix">+</span><span class="stat-label">Students</span></div>
+          <div class="hero-stat"><span class="stat-number" data-count="1200">0</span><span class="stat-suffix">+</span><span class="stat-label">Courses</span></div>
+          <div class="hero-stat"><span class="stat-number" data-count="98">0</span><span class="stat-suffix">%</span><span class="stat-label">Satisfaction</span></div>
+        </div>
+      </div>
+      <div class="hero-visual" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
+        <div class="hero-card-stack">
+          <div class="floating-card card-1"><i class="fas fa-brain"></i><span>AI Powered</span></div>
+          <div class="floating-card card-2"><i class="fas fa-chart-line"></i><span>Track Progress</span></div>
+          <div class="floating-card card-3"><i class="fas fa-users"></i><span>Collaborate</span></div>
+          <div class="hero-illustration">
+            <div class="illustration-circle">
+              <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
+              <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
+              <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
+              <div class="center-icon"><i class="fas fa-lightbulb"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-wave"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,30 1440,60 L1440,120 L0,120 Z" /></svg></div>
+  </section>
+
+  <!-- MARQUEE -->
+  <section class="marquee-section">
+    <div class="marquee-track">
+      <div class="marquee-content">
+        <span><i class="fas fa-star"></i> Adaptive Learning</span>
+        <span><i class="fas fa-star"></i> Real-Time Analytics</span>
+        <span><i class="fas fa-star"></i> AI-Powered Tutoring</span>
+        <span><i class="fas fa-star"></i> Interactive Labs</span>
+        <span><i class="fas fa-star"></i> Gamified Lessons</span>
+        <span><i class="fas fa-star"></i> Smart Assessments</span>
+        <span><i class="fas fa-star"></i> Video Lectures</span>
+        <span><i class="fas fa-star"></i> Peer Collaboration</span>
+        <span><i class="fas fa-star"></i> Adaptive Learning</span>
+        <span><i class="fas fa-star"></i> Real-Time Analytics</span>
+        <span><i class="fas fa-star"></i> AI-Powered Tutoring</span>
+        <span><i class="fas fa-star"></i> Interactive Labs</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag"><i class="fas fa-gem"></i> Why Choose Us</span>
+        <h2>Powerful Features for <span class="gradient-text">Smart Learners</span></h2>
+        <p>Our platform combines cutting-edge technology with proven pedagogical methods to create the ultimate learning experience.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-icon" style="--accent: #6c5ce7;"><i class="fas fa-robot"></i></div>
+          <h3>AI-Powered Learning</h3>
+          <p>Personalized learning paths powered by artificial intelligence that adapt to your pace, strengths, and areas for improvement.</p>
+          <div class="feature-tag">Machine Learning</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-icon" style="--accent: #00b894;"><i class="fas fa-gamepad"></i></div>
+          <h3>Gamified Experience</h3>
+          <p>Earn XP, badges, and climb leaderboards as you learn. Transform boring study sessions into exciting challenges.</p>
+          <div class="feature-tag">Engagement</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-icon" style="--accent: #e17055;"><i class="fas fa-video"></i></div>
+          <h3>Live Interactive Classes</h3>
+          <p>Join real-time sessions with expert instructors. Ask questions, participate in polls, and collaborate with classmates.</p>
+          <div class="feature-tag">Real-time</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="feature-icon" style="--accent: #0984e3;"><i class="fas fa-chart-pie"></i></div>
+          <h3>Smart Analytics</h3>
+          <p>Detailed dashboards tracking your learning progress, time spent, quiz scores, and predicted performance trends.</p>
+          <div class="feature-tag">Data-Driven</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-icon" style="--accent: #fdcb6e;"><i class="fas fa-mobile-alt"></i></div>
+          <h3>Learn Anywhere</h3>
+          <p>Seamlessly switch between devices. Download courses for offline access and study even without an internet connection.</p>
+          <div class="feature-tag">Cross-Platform</div>
+        </div>
+        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-icon" style="--accent: #a29bfe;"><i class="fas fa-certificate"></i></div>
+          <h3>Verified Certificates</h3>
+          <p>Earn industry-recognized certificates upon completion. Share your achievements directly on LinkedIn and resumes.</p>
+          <div class="feature-tag">Credential</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="how">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag"><i class="fas fa-cogs"></i> How It Works</span>
+        <h2>Your Learning Journey in <span class="gradient-text">4 Steps</span></h2>
+      </div>
+      <div class="steps-timeline">
+        <div class="timeline-line"></div>
+        <div class="step" data-aos="fade-right" data-aos-delay="100">
+          <div class="step-number">01</div>
+          <div class="step-content"><div class="step-icon"><i class="fas fa-user-plus"></i></div><h3>Sign Up Free</h3><p>Create your profile in under 60 seconds. No credit card required.</p></div>
+        </div>
+        <div class="step" data-aos="fade-left" data-aos-delay="200">
+          <div class="step-number">02</div>
+          <div class="step-content"><div class="step-icon"><i class="fas fa-compass"></i></div><h3>Explore &amp; Choose</h3><p>Browse 1200+ courses across 50+ categories and pick your path.</p></div>
+        </div>
+        <div class="step" data-aos="fade-right" data-aos-delay="300">
+          <div class="step-number">03</div>
+          <div class="step-content"><div class="step-icon"><i class="fas fa-laptop-code"></i></div><h3>Learn Interactively</h3><p>Watch videos, solve problems, do labs, and take AI-adaptive quizzes.</p></div>
+        </div>
+        <div class="step" data-aos="fade-left" data-aos-delay="400">
+          <div class="step-number">04</div>
+          <div class="step-content"><div class="step-icon"><i class="fas fa-trophy"></i></div><h3>Get Certified</h3><p>Complete the course and earn a verified, shareable certificate.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section class="courses" id="courses">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag"><i class="fas fa-book-open"></i> Popular Courses</span>
+        <h2>Trending Courses in <span class="gradient-text">2026</span></h2>
+        <p>Handpicked by our academic experts to keep you ahead of the curve.</p>
+      </div>
+      <div class="course-filters" data-aos="fade-up" data-aos-delay="100">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="tech">Technology</button>
+        <button class="filter-btn" data-filter="science">Science</button>
+        <button class="filter-btn" data-filter="arts">Arts</button>
+        <button class="filter-btn" data-filter="business">Business</button>
+      </div>
+      <div class="courses-grid" id="coursesGrid">
+        <div class="course-card" data-category="tech" data-aos="zoom-in" data-aos-delay="100">
+          <div class="course-banner" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);"><div class="course-level">Advanced</div><i class="fas fa-brain course-banner-icon"></i></div>
+          <div class="course-body"><div class="course-meta"><span><i class="fas fa-clock"></i> 24 Hours</span><span><i class="fas fa-users"></i> 3.2k Students</span></div><h3>Artificial Intelligence & Machine Learning</h3><p>Master neural networks, deep learning, NLP, and build real-world AI applications.</p><div class="course-footer"><div class="course-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>4.8</span></div><span class="course-price">Free</span></div><button class="btn btn-primary btn-block">Enroll Now</button></div>
+        </div>
+        <div class="course-card" data-category="tech" data-aos="zoom-in" data-aos-delay="200">
+          <div class="course-banner" style="background: linear-gradient(135deg, #00b894, #00cec9);"><div class="course-level">Intermediate</div><i class="fas fa-code course-banner-icon"></i></div>
+          <div class="course-body"><div class="course-meta"><span><i class="fas fa-clock"></i> 18 Hours</span><span><i class="fas fa-users"></i> 5.1k Students</span></div><h3>Full-Stack Web Development</h3><p>Build responsive websites and powerful backends with React, Node.js, and databases.</p><div class="course-footer"><div class="course-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>4.9</span></div><span class="course-price">Free</span></div><button class="btn btn-primary btn-block">Enroll Now</button></div>
+        </div>
+        <div class="course-card" data-category="science" data-aos="zoom-in" data-aos-delay="300">
+          <div class="course-banner" style="background: linear-gradient(135deg, #e17055, #fdcb6e);"><div class="course-level">Beginner</div><i class="fas fa-atom course-banner-icon"></i></div>
+          <div class="course-body"><div class="course-meta"><span><i class="fas fa-clock"></i> 12 Hours</span><span><i class="fas fa-users"></i> 2.8k Students</span></div><h3>Quantum Computing Fundamentals</h3><p>Explore qubits, quantum gates, entanglement, and program on real quantum hardware.</p><div class="course-footer"><div class="course-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><span>4.3</span></div><span class="course-price">Free</span></div><button class="btn btn-primary btn-block">Enroll Now</button></div>
+        </div>
+        <div class="course-card" data-category="arts" data-aos="zoom-in" data-aos-delay="100">
+          <div class="course-banner" style="background: linear-gradient(135deg, #fd79a8, #e84393);"><div class="course-level">Beginner</div><i class="fas fa-palette course-banner-icon"></i></div>
+          <div class="course-body"><div class="course-meta"><span><i class="fas fa-clock"></i> 10 Hours</span><span><i class="fas fa-users"></i> 4.5k Students</span></div><h3>UI/UX Design Masterclass</h3><p>Design beautiful interfaces with Figma, master user research, and build design systems.</p><div class="course-footer"><div class="course-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>4.7</span></div><span class="course-price">Free</span></div><button class="btn btn-primary btn-block">Enroll Now</button></div>
+        </div>
+        <div class="course-card" data-category="business" data-aos="zoom-in" data-aos-delay="200">
+          <div class="course-banner" style="background: linear-gradient(135deg, #0984e3, #74b9ff);"><div class="course-level">Intermediate</div><i class="fas fa-chart-bar course-banner-icon"></i></div>
+          <div class="course-body"><div class="course-meta"><span><i class="fas fa-clock"></i> 15 Hours</span><span><i class="fas fa-users"></i> 3.9k Students</span></div><h3>Data Science & Analytics</h3><p>Master Python, Pandas, data visualization, and statistical analysis for business insights.</p><div class="course-footer"><div class="course-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>4.9</span></div><span class="course-price">Free</span></div><button class="btn btn-primary btn-block">Enroll Now</button></div>
+        </div>
+        <div class="course-card" data-category="science" data-aos="zoom-in" data-aos-delay="300">
+          <div class="course-banner" style="background: linear-gradient(135deg, #00b4d8, #0077b6);"><div class="course-level">Advanced</div><i class="fas fa-dna course-banner-icon"></i></div>
+          <div class="course-body"><div class="course-meta"><span><i class="fas fa-clock"></i> 20 Hours</span><span><i class="fas fa-users"></i> 1.7k Students</span></div><h3>Biotechnology & Genomics</h3><p>Learn CRISPR, gene editing, bioinformatics, and the future of personalized medicine.</p><div class="course-footer"><div class="course-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><span>4.4</span></div><span class="course-price">Free</span></div><button class="btn btn-primary btn-block">Enroll Now</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE TOOLS -->
+  <section class="tools-section" id="tools">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag"><i class="fas fa-tools"></i> Interactive Tools</span>
+        <h2>Learn by <span class="gradient-text">Doing</span></h2>
+        <p>Try our interactive tools right here — experience smart education first-hand.</p>
+      </div>
+      <div class="tools-grid">
+        <!-- Quiz -->
+        <div class="tool-card quiz-widget" data-aos="fade-up" data-aos-delay="100">
+          <div class="tool-header"><i class="fas fa-question-circle"></i><h3>Quick Quiz</h3></div>
+          <div class="quiz-container" id="quizContainer">
+            <div class="quiz-progress"><div class="quiz-progress-bar" id="quizProgressBar"></div></div>
+            <p class="quiz-counter" id="quizCounter">Question 1 of 5</p>
+            <p class="quiz-question" id="quizQuestion"></p>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="quiz-result" id="quizResult" style="display:none;">
+              <div class="result-circle"><svg viewBox="0 0 36 36"><path class="result-bg" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831" /><path class="result-fill" id="resultFill" stroke-dasharray="0, 100" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831" /></svg><span class="result-percent" id="resultPercent">0%</span></div>
+              <p id="resultMessage"></p>
+              <button class="btn btn-primary" onclick="resetQuiz()">Try Again</button>
+            </div>
+          </div>
+        </div>
+        <!-- Pomodoro -->
+        <div class="tool-card pomodoro-widget" data-aos="fade-up" data-aos-delay="200">
+          <div class="tool-header"><i class="fas fa-stopwatch"></i><h3>Study Timer (Pomodoro)</h3></div>
+          <div class="pomodoro-container">
+            <div class="pomodoro-display"><svg class="pomodoro-ring" viewBox="0 0 200 200"><circle class="ring-bg" cx="100" cy="100" r="90" /><circle class="ring-fill" id="pomodoroRing" cx="100" cy="100" r="90" /></svg><div class="pomodoro-time" id="pomodoroTime">55:00</div></div>
+            <div class="pomodoro-modes"><button class="pomo-mode active" onclick="setPomodoro(55,'focus')" data-mode="focus">Focus</button><button class="pomo-mode" onclick="setPomodoro(5,'short')" data-mode="short">Short Break</button><button class="pomo-mode" onclick="setPomodoro(15,'long')" data-mode="long">Long Break</button></div>
+            <div class="pomodoro-controls"><button class="btn btn-primary" id="pomodoroStartBtn" onclick="togglePomodoro()"><i class="fas fa-play"></i> Start</button><button class="btn btn-outline" onclick="resetPomodoro()"><i class="fas fa-redo"></i> Reset</button></div>
+            <div class="pomodoro-sessions"><span>Sessions completed: <strong id="pomodoroSessions">0</strong></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="100"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value" data-count="50000">0</div><div class="stat-name">Active Learners</div></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="200"><div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-value" data-count="350">0</div><div class="stat-name">Expert Mentors</div></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="300"><div class="stat-icon"><i class="fas fa-book"></i></div><div class="stat-value" data-count="1200">0</div><div class="stat-name">Courses Available</div></div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="400"><div class="stat-icon"><i class="fas fa-globe-asia"></i></div><div class="stat-value" data-count="120">0</div><div class="stat-name">Countries Reached</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag"><i class="fas fa-comments"></i> Testimonials</span>
+        <h2>What Our <span class="gradient-text">Students Say</span></h2>
+      </div>
+      <div class="testimonial-slider" id="testimonialSlider">
+        <div class="testimonial-card active"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p>"SmartEdu completely transformed how I study. The AI-powered quizzes identified my weak areas and the personalized study plan helped me score top grades!"</p><div class="testimonial-author"><div class="author-avatar" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">AP</div><div><strong>Aarav Patel</strong><span>Computer Science, IIT Delhi</span></div></div></div>
+        <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><p>"The Pomodoro timer and gamification features keep me motivated. I've completed 12 courses in 3 months — something I never thought possible!"</p><div class="testimonial-author"><div class="author-avatar" style="background: linear-gradient(135deg, #00b894, #00cec9);">SK</div><div><strong>Sneha Kumar</strong><span>Data Science, NIT Trichy</span></div></div></div>
+        <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p>"As a working professional, flexibility was key. SmartEdu's offline mode and bite-sized lessons let me learn during my daily commute. Highly recommend!"</p><div class="testimonial-author"><div class="author-avatar" style="background: linear-gradient(135deg, #e17055, #fdcb6e);">RV</div><div><strong>Rahul Verma</strong><span>Product Manager, Flipkart</span></div></div></div>
+      </div>
+      <div class="testimonial-dots" id="testimonialDots"><button class="dot active" onclick="goToTestimonial(0)"></button><button class="dot" onclick="goToTestimonial(1)"></button><button class="dot" onclick="goToTestimonial(2)"></button></div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag"><i class="fas fa-tags"></i> Pricing</span>
+        <h2>Plans for Every <span class="gradient-text">Learner</span></h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card" data-aos="fade-up" data-aos-delay="100"><div class="pricing-header"><h3>Starter</h3><div class="pricing-amount"><span class="currency">₹</span>0<span class="period">/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Access to 100+ free courses</li><li><i class="fas fa-check"></i> Community forums</li><li><i class="fas fa-check"></i> Basic progress tracking</li><li><i class="fas fa-check"></i> Quiz & assessments</li><li class="disabled"><i class="fas fa-times"></i> AI tutor</li><li class="disabled"><i class="fas fa-times"></i> Certificates</li></ul><button class="btn btn-outline btn-block">Get Started</button></div>
+        <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="200"><div class="pricing-badge">Most Popular</div><div class="pricing-header"><h3>Pro</h3><div class="pricing-amount"><span class="currency">₹</span>499<span class="period">/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> All 1200+ courses</li><li><i class="fas fa-check"></i> AI-powered tutor</li><li><i class="fas fa-check"></i> Verified certificates</li><li><i class="fas fa-check"></i> Advanced analytics</li><li><i class="fas fa-check"></i> Offline downloads</li><li><i class="fas fa-check"></i> Priority support</li></ul><button class="btn btn-primary btn-block">Start Free Trial</button></div>
+        <div class="pricing-card" data-aos="fade-up" data-aos-delay="300"><div class="pricing-header"><h3>Institution</h3><div class="pricing-amount"><span class="currency">₹</span>2999<span class="period">/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Everything in Pro</li><li><i class="fas fa-check"></i> Admin dashboard</li><li><i class="fas fa-check"></i> Bulk student accounts</li><li><i class="fas fa-check"></i> Custom branding</li><li><i class="fas fa-check"></i> API access</li><li><i class="fas fa-check"></i> Dedicated account manager</li></ul><button class="btn btn-outline btn-block">Contact Sales</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter" id="signup">
+    <div class="container">
+      <div class="newsletter-content" data-aos="zoom-in">
+        <div class="newsletter-text"><h2>Ready to Start Your <span class="gradient-text">Smart Learning</span> Journey?</h2><p>Join 50,000+ learners. Get free access to our top courses, weekly study tips, and exclusive resources.</p></div>
+        <form class="newsletter-form" id="signupForm" onsubmit="handleSignup(event)">
+          <div class="form-group-inline"><input type="text" placeholder="Your Name" required /><input type="email" placeholder="your.email@example.com" required /><button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Join Free</button></div>
+          <p class="form-note"><i class="fas fa-lock"></i> No spam, ever. Unsubscribe anytime.</p>
+        </form>
+        <div class="signup-success" id="signupSuccess" style="display:none;"><i class="fas fa-check-circle"></i><p>Welcome aboard! Check your inbox for a confirmation email. 🎉</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-tag"><i class="fas fa-envelope"></i> Get In Touch</span>
+        <h2>We'd Love to <span class="gradient-text">Hear From You</span></h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info" data-aos="fade-right">
+          <div class="contact-item"><div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div><div><h4>Address</h4><p>Innovation Hub, Sector 62<br>Noida, UP 201309, India</p></div></div>
+          <div class="contact-item"><div class="contact-icon"><i class="fas fa-phone-alt"></i></div><div><h4>Phone</h4><p>+91 98765 43210</p></div></div>
+          <div class="contact-item"><div class="contact-icon"><i class="fas fa-envelope"></i></div><div><h4>Email</h4><p>hello@smartedu.in</p></div></div>
+          <div class="contact-socials"><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a><a href="#"><i class="fab fa-github"></i></a></div>
+        </div>
+        <form class="contact-form" data-aos="fade-left" onsubmit="handleContact(event)">
+          <div class="form-row"><div class="form-group"><label>First Name</label><input type="text" placeholder="John" required /></div><div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe" required /></div></div>
+          <div class="form-group"><label>Email</label><input type="email" placeholder="john@example.com" required /></div>
+          <div class="form-group"><label>Subject</label><select><option>General Inquiry</option><option>Technical Support</option><option>Partnership</option><option>Feedback</option></select></div>
+          <div class="form-group"><label>Message</label><textarea rows="4" placeholder="Tell us how we can help…" required></textarea></div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fas fa-paper-plane"></i> Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><a href="#" class="nav-logo"><div class="logo-icon"><i class="fas fa-graduation-cap"></i></div><span>Smart<span class="accent">Edu</span></span></a><p>Empowering the next generation of learners with smart, AI-driven education tools for the digital age.</p><div class="footer-socials"><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-youtube"></i></a></div></div>
+        <div class="footer-links"><h4>Platform</h4><ul><li><a href="#courses">Courses</a></li><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#tools">Tools</a></li></ul></div>
+        <div class="footer-links"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Press</a></li></ul></div>
+        <div class="footer-links"><h4>Support</h4><ul><li><a href="#contact">Contact</a></li><li><a href="#">Help Center</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><p>&copy; 2026 SmartEdu. All rights reserved. Built with <i class="fas fa-heart" style="color:#e17055;"></i> for learners everywhere.</p></div>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <button class="back-to-top" id="backToTop" title="Back to top"><i class="fas fa-chevron-up"></i></button>
+
+  <!-- SCRIPTS -->
+    <script>
+/* SMART EDU — interactive scripts (robust build) */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const safe = fn => { try { fn(); } catch (e) { console.error(e); } };
+
+/* Preloader (with fallback so it can never get stuck) */
+function hidePreloader() { const p = $('#preloader'); if (p) p.classList.add('hide'); }
+window.addEventListener('load', () => setTimeout(hidePreloader, 600));
+setTimeout(hidePreloader, 3000);
+
+/* Scroll-reveal (replaces AOS) */
+function initReveal() {
+  const els = $$('[data-aos]');
+  const show = el => { el.classList.add('aos-animate'); setTimeout(() => { el.removeAttribute('data-aos'); el.classList.remove('aos-animate'); el.style.transitionDelay = ''; }, 1500); };
+  if (!('IntersectionObserver' in window)) { els.forEach(el => el.removeAttribute('data-aos')); return; }
+  const io = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { show(en.target); io.unobserve(en.target); } }), { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => { el.style.transitionDelay = (el.getAttribute('data-aos-delay') || 0) + 'ms'; io.observe(el); });
+}
+
+/* Cursor glow (desktop only) */
+safe(() => {
+  const glow = $('#cursorGlow');
+  if (glow && window.matchMedia('(hover:hover) and (min-width: 769px)').matches) {
+    document.addEventListener('mousemove', e => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; }, { passive: true });
+  }
+});
+
+/* Theme */
+const themeToggle = $('#themeToggle');
+function applyTheme(t) {
+  if (t === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); themeToggle.innerHTML = '<i class="fas fa-sun"></i>'; }
+  else { document.documentElement.removeAttribute('data-theme'); themeToggle.innerHTML = '<i class="fas fa-moon"></i>'; }
+  try { localStorage.setItem('smartedu-theme', t); } catch (e) {}
+}
+safe(() => {
+  let t = null; try { t = localStorage.getItem('smartedu-theme'); } catch (e) {}
+  if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+  applyTheme(t === 'dark' ? 'dark' : 'light');
+  themeToggle.addEventListener('click', () => applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+});
+
+/* Mobile menu */
+safe(() => {
+  const hamburger = $('#hamburger'), navLinks = $('#navLinks');
+  const close = () => { hamburger.classList.remove('active'); navLinks.classList.remove('open'); };
+  hamburger.addEventListener('click', e => { e.stopPropagation(); hamburger.classList.toggle('active'); navLinks.classList.toggle('open'); });
+  $$('a', navLinks).forEach(a => a.addEventListener('click', close));
+  document.addEventListener('click', e => { if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) close(); });
+  window.addEventListener('resize', () => { if (window.innerWidth > 768) close(); });
+});
+
+/* Navbar, back-to-top, active link */
+safe(() => {
+  const navbar = $('#navbar'), btt = $('#backToTop'), links = $$('#navLinks a'), sections = $$('section[id]');
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const y = window.scrollY;
+    navbar.classList.toggle('scrolled', y > 20);
+    btt.classList.toggle('visible', y > 500);
+    let current = sections.length ? sections[0].id : '';
+    sections.forEach(s => { if (y + 140 >= s.offsetTop) current = s.id; });
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+  };
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  update();
+});
+
+/* Placeholder "#" links shouldn't jump the page */
+$$('a[href="#"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+
+/* Particles */
+function initParticles() {
+  const c = $('#particles'); if (!c) return;
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div'); p.className = 'particle';
+    const size = (2 + Math.random() * 4) + 'px';
+    p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
+    p.style.width = size; p.style.height = size;
+    p.style.animationDuration = (2 + Math.random() * 4) + 's'; p.style.animationDelay = Math.random() * 3 + 's';
+    c.appendChild(p);
+  }
+}
+
+/* Counters */
+function initCounters() {
+  const counters = $$('[data-count]');
+  const run = (el) => {
+    const target = +el.getAttribute('data-count'), dur = 2000, t0 = performance.now();
+    const tick = now => { const p = Math.min((now - t0) / dur, 1); el.textContent = Math.floor((1 - Math.pow(1 - p, 3)) * target).toLocaleString(); if (p < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  };
+  if (!('IntersectionObserver' in window)) { counters.forEach(c => c.textContent = (+c.dataset.count).toLocaleString()); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }), { threshold: 0.3 });
+  counters.forEach(c => io.observe(c));
+}
+
+/* Course filters */
+safe(() => {
+  const btns = $$('.filter-btn'), cards = $$('.course-card');
+  btns.forEach(btn => btn.addEventListener('click', () => {
+    btns.forEach(b => b.classList.remove('active')); btn.classList.add('active');
+    const f = btn.dataset.filter;
+    cards.forEach(card => {
+      const match = f === 'all' || card.dataset.category === f;
+      card.classList.toggle('hidden', !match);
+      if (match) { card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'fadeIn 0.4s ease'; setTimeout(() => { card.style.animation = ''; }, 450); }
+    });
+  }));
+});
+
+/* Quiz */
+const quizData = [
+  { question: "What does 'Smart Education' primarily focus on?", options: ["Traditional classroom lectures", "Learning in the digital age", "Memorizing textbooks", "Avoiding technology"], correct: 1 },
+  { question: "Which technology powers personalized learning paths?", options: ["Blockchain", "Virtual Reality only", "Artificial Intelligence", "Social Media"], correct: 2 },
+  { question: "What is the Pomodoro Technique used for?", options: ["Cooking Italian food", "Time management & focus", "Social networking", "Database management"], correct: 1 },
+  { question: "What makes Smart Education 'flexible'?", options: ["Fixed schedules only", "Learn anywhere, anytime", "Only in classrooms", "Paper-based tests only"], correct: 1 },
+  { question: "Which is NOT a benefit of gamified learning?", options: ["Increased motivation", "Better engagement", "Reduced attention span", "Reward-based progress"], correct: 2 }
+];
+let currentQ = 0, score = 0, quizLocked = false, quizTimer = null;
+function loadQuestion() {
+  const q = quizData[currentQ]; quizLocked = false;
+  $('#quizQuestion').textContent = q.question;
+  $('#quizCounter').textContent = `Question ${currentQ + 1} of ${quizData.length}`;
+  $('#quizProgressBar').style.width = ((currentQ + 1) / quizData.length * 100) + '%';
+  const box = $('#quizOptions'); box.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'quiz-option'; b.textContent = opt;
+    b.addEventListener('click', () => selectAnswer(i, b)); box.appendChild(b);
+  });
+}
+function selectAnswer(i, btn) {
+  if (quizLocked) return; quizLocked = true;
+  const correct = quizData[currentQ].correct, all = $$('.quiz-option');
+  if (i === correct) { btn.classList.add('correct'); score++; } else { btn.classList.add('wrong'); all[correct].classList.add('correct'); }
+  quizTimer = setTimeout(() => { currentQ++; currentQ < quizData.length ? loadQuestion() : showQuizResult(); }, 900);
+}
+function showQuizResult() {
+  const pct = Math.round(score / quizData.length * 100);
+  ['#quizQuestion', '#quizOptions', '#quizCounter', '.quiz-progress'].forEach(s => $(s).style.display = 'none');
+  $('#quizResult').style.display = 'block';
+  $('#resultPercent').textContent = pct + '%';
+  $('#resultFill').setAttribute('stroke-dasharray', `${pct}, 100`);
+  $('#resultMessage').textContent = pct === 100 ? "🎉 Perfect score! You're a Smart Education champion!" : pct >= 60 ? '👏 Great job! You know your smart learning concepts!' : '📚 Keep learning! Smart Education has so much to offer.';
+}
+function resetQuiz() {
+  clearTimeout(quizTimer); currentQ = 0; score = 0;
+  ['#quizQuestion', '#quizOptions', '#quizCounter'].forEach(s => $(s).style.display = '');
+  $('.quiz-progress').style.display = ''; $('#quizResult').style.display = 'none';
+  $('#resultFill').setAttribute('stroke-dasharray', '0, 100'); loadQuestion();
+}
+
+/* Pomodoro (timestamp-based so it stays accurate in background tabs) */
+const POMO_MINUTES = { focus: 55, short: 5, long: 15 };
+let pomoMode = 'focus', pomoTotal = 55 * 60, pomoLeft = 55 * 60, pomoEnd = 0, pomoTimer = null, pomoSessions = 0;
+function pomoBtn(label, icon) { $('#pomodoroStartBtn').innerHTML = `<i class="fas fa-${icon}"></i> ${label}`; }
+function updatePomodoroDisplay() {
+  const m = String(Math.floor(pomoLeft / 60)).padStart(2, '0'), s = String(pomoLeft % 60).padStart(2, '0');
+  $('#pomodoroTime').textContent = `${m}:${s}`;
+  const ring = $('#pomodoroRing'), c = 2 * Math.PI * 90;
+  ring.style.strokeDasharray = c; ring.style.strokeDashoffset = c * (1 - pomoLeft / pomoTotal);
+  document.title = pomoTimer ? `${m}:${s} · SmartEdu` : 'SmartEdu';
+}
+function stopPomo() { clearInterval(pomoTimer); pomoTimer = null; }
+function setPomodoro(min, mode) {
+  stopPomo(); pomoMode = mode; pomoTotal = pomoLeft = min * 60;
+  $$('.pomo-mode').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  pomoBtn('Start', 'play'); updatePomodoroDisplay();
+}
+function pomoTick() {
+  pomoLeft = Math.max(0, Math.round((pomoEnd - Date.now()) / 1000));
+  if (pomoLeft <= 0) {
+    stopPomo();
+    if (pomoMode === 'focus') { pomoSessions++; $('#pomodoroSessions').textContent = pomoSessions; }
+    pomoBtn('Start', 'play'); pomoLeft = 0; updatePomodoroDisplay();
+    try { const ctx = new (window.AudioContext || window.webkitAudioContext)(), o = ctx.createOscillator(), g = ctx.createGain(); o.connect(g); g.connect(ctx.destination); g.gain.value = 0.1; o.frequency.value = 880; o.start(); o.stop(ctx.currentTime + 0.4); } catch (e) {}
+    return;
+  }
+  updatePomodoroDisplay();
+}
+function togglePomodoro() {
+  if (pomoTimer) { stopPomo(); pomoBtn('Resume', 'play'); updatePomodoroDisplay(); return; }
+  if (pomoLeft <= 0) pomoLeft = pomoTotal;
+  pomoEnd = Date.now() + pomoLeft * 1000; pomoTimer = setInterval(pomoTick, 250);
+  pomoBtn('Pause', 'pause'); pomoTick();
+}
+function resetPomodoro() { setPomodoro(POMO_MINUTES[pomoMode], pomoMode); }
+
+/* Testimonials */
+let currentTestimonial = 0, testiTimer = null;
+function goToTestimonial(i) {
+  const cards = $$('.testimonial-card'), dots = $$('.dot');
+  if (!cards.length) return;
+  cards[currentTestimonial].classList.remove('active'); dots[currentTestimonial] && dots[currentTestimonial].classList.remove('active');
+  currentTestimonial = (i + cards.length) % cards.length;
+  cards[currentTestimonial].classList.add('active'); dots[currentTestimonial] && dots[currentTestimonial].classList.add('active');
+  startTestimonials();
+}
+function startTestimonials() {
+  clearInterval(testiTimer);
+  testiTimer = setInterval(() => { if (!document.hidden) goToTestimonial(currentTestimonial + 1); }, 5000);
+}
+
+/* Forms */
+function handleSignup(e) { e.preventDefault(); $('#signupForm').style.display = 'none'; $('#signupSuccess').style.display = 'block'; }
+function handleContact(e) {
+  e.preventDefault(); const form = e.target, btn = $('button[type="submit"]', form);
+  btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!'; btn.style.background = 'var(--secondary)'; btn.disabled = true;
+  setTimeout(() => { btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message'; btn.style.background = ''; btn.disabled = false; form.reset(); }, 3000);
+}
+
+
+/* ═══════ COURSE DETAILS (modal) ═══════ */
+const COURSES = [
+  { title: 'Artificial Intelligence & Machine Learning', icon: 'brain', grad: 'linear-gradient(135deg,#6c5ce7,#a29bfe)', level: 'Advanced', hours: '24 Hours',
+    overview: 'This course takes you from the mathematics behind machine learning to building and deploying real AI systems. You will train neural networks, work with language and vision models, and learn how modern tools like transformers power today\'s AI products.',
+    learn: ['Supervised, unsupervised and reinforcement learning basics', 'Neural networks and deep learning with Python', 'Natural Language Processing and transformer models', 'Computer vision fundamentals', 'Model evaluation, tuning and responsible AI', 'Deploying a trained model as a working app'],
+    advantages: ['Hands-on projects you can show in a portfolio', 'Builds the skills behind the fastest-growing tech roles', 'Self-paced, so you can learn alongside studies or work', 'Covers ethics and bias, not just code'],
+    useful: 'AI skills are used in healthcare, finance, education, farming, manufacturing and almost every software product. Graduates move into roles such as ML Engineer, Data Scientist, AI Researcher or Prompt/AI Product Specialist, and the skills also help you automate everyday work.',
+    who: 'Students and professionals comfortable with basic Python and school-level maths (algebra, a little statistics).',
+    path: ['Python & maths refresher', 'Classical machine learning', 'Deep learning', 'NLP & vision', 'Capstone project'],
+    links: [['Machine Learning Specialization (Andrew Ng, Coursera)', 'https://www.coursera.org/specializations/machine-learning-introduction'], ['Practical Deep Learning for Coders (fast.ai, free)', 'https://course.fast.ai/'], ['Machine Learning Crash Course (Google, free)', 'https://developers.google.com/machine-learning/crash-course'], ['Hugging Face NLP Course (free)', 'https://huggingface.co/learn/nlp-course']] },
+  { title: 'Full-Stack Web Development', icon: 'code', grad: 'linear-gradient(135deg,#00b894,#00cec9)', level: 'Intermediate', hours: '18 Hours',
+    overview: 'Learn to build complete web applications: the visual front end users see and the server and database behind it. You will work with HTML, CSS, JavaScript, React, Node.js and databases, and finish by shipping a real project online.',
+    learn: ['Modern HTML, CSS and responsive layouts', 'JavaScript from fundamentals to advanced concepts', 'Building interfaces with React', 'Servers and REST APIs with Node.js and Express', 'Databases (SQL and MongoDB) and authentication', 'Git, GitHub and deploying a site to the web'],
+    advantages: ['One skill set lets you build products end to end', 'Strong demand for web developers worldwide', 'Great for freelancing or building your own startup', 'Every lesson ends in something you can see working'],
+    useful: 'Almost every business needs a website or web app. You can work as a Front-End, Back-End or Full-Stack Developer, take freelance projects, or launch your own product. The same skills also carry into mobile and cloud development.',
+    who: 'Anyone who has written a little code before and wants to build real, working websites.',
+    path: ['HTML & CSS', 'JavaScript', 'React front end', 'Node.js & databases', 'Deploy a full project'],
+    links: [['freeCodeCamp: Responsive Web Design & JavaScript (free)', 'https://www.freecodecamp.org/learn'], ['The Odin Project: Full Stack path (free)', 'https://www.theodinproject.com/'], ['Full Stack Open (University of Helsinki, free)', 'https://fullstackopen.com/en/'], ['MDN Learn Web Development (free)', 'https://developer.mozilla.org/en-US/docs/Learn']] },
+  { title: 'Quantum Computing Fundamentals', icon: 'atom', grad: 'linear-gradient(135deg,#e17055,#fdcb6e)', level: 'Beginner', hours: '12 Hours',
+    overview: 'An approachable introduction to a new kind of computing. You will learn what qubits are, how superposition and entanglement work, how quantum gates combine into circuits, and how to run simple programs on a simulator or real quantum hardware.',
+    learn: ['Qubits, superposition and measurement', 'Quantum gates and circuits', 'Entanglement and famous protocols', 'Intro to quantum algorithms (Deutsch-Jozsa, Grover\'s search)', 'Writing quantum programs with Qiskit', 'Where quantum computing is useful today and where it is not'],
+    advantages: ['Beginner friendly with visual explanations', 'Early skills in a field that is still young', 'Run real experiments through free cloud access', 'Strengthens your linear algebra and logic skills'],
+    useful: 'Quantum computing is expected to affect chemistry and drug discovery, cryptography, logistics and finance. Learning it now prepares you for research, quantum software roles, or advanced degrees in physics and computer science.',
+    who: 'Curious beginners with school-level maths. Basic Python helps but is not required.',
+    path: ['Why quantum?', 'Qubits & gates', 'Circuits in Qiskit', 'Algorithms', 'Run on real hardware'],
+    links: [['IBM Quantum Learning (free)', 'https://learning.quantum.ibm.com/'], ['Quantum Country: Quantum Computing for the Very Curious (free)', 'https://quantum.country/'], ['PennyLane Quantum Machine Learning tutorials (free)', 'https://pennylane.ai/qml']] },
+  { title: 'UI/UX Design Masterclass', icon: 'palette', grad: 'linear-gradient(135deg,#fd79a8,#e84393)', level: 'Beginner', hours: '10 Hours',
+    overview: 'Learn how to design products people enjoy using. You will research users, sketch and prototype in Figma, apply visual design principles, and build a small design system and portfolio case study.',
+    learn: ['User research, personas and user journeys', 'Wireframing and low to high fidelity prototypes', 'Visual design: colour, typography, spacing and layout', 'Designing in Figma with components and auto layout', 'Usability testing and iteration', 'Accessibility and inclusive design basics'],
+    advantages: ['No coding needed to begin', 'Creative work with clear, practical results', 'Portfolio-ready case studies', 'Skills transfer to apps, websites and products of any kind'],
+    useful: 'Good design makes products easier to use and helps businesses keep customers. You can work as a UI Designer, UX Researcher, Product Designer or Brand Designer, or improve the products you build as a developer or founder.',
+    who: 'Beginners, students, developers and marketers who want to design better digital products.',
+    path: ['Design thinking', 'Research & wireframes', 'Visual design', 'Prototype in Figma', 'Test & present'],
+    links: [['Google UX Design Certificate (Coursera)', 'https://www.coursera.org/professional-certificates/google-ux-design'], ['Figma: Get started (official guides)', 'https://help.figma.com/hc/en-us/categories/360002051613-Get-started'], ['Interaction Design Foundation', 'https://www.interaction-design.org/'], ['Nielsen Norman Group: UX articles (free)', 'https://www.nngroup.com/articles/']] },
+  { title: 'Data Science & Analytics', icon: 'chart-bar', grad: 'linear-gradient(135deg,#0984e3,#74b9ff)', level: 'Intermediate', hours: '15 Hours',
+    overview: 'Turn raw data into decisions. You will clean and explore data with Python and Pandas, create clear charts, apply statistics, and present insights that a business team can act on.',
+    learn: ['Python for data analysis with Pandas and NumPy', 'Cleaning and preparing messy data', 'Data visualisation (Matplotlib, Seaborn, dashboards)', 'Descriptive and inferential statistics', 'SQL for querying databases', 'Telling a story with data in a final project'],
+    advantages: ['Directly applicable to business problems', 'Real datasets in every module', 'A solid base for machine learning later', 'Useful in any industry, not only tech'],
+    useful: 'Companies of every size rely on data to plan, price, market and improve. You can work as a Data Analyst, Business Analyst, Data Scientist or BI Developer, and the skills help in research, finance, marketing and operations.',
+    who: 'Learners comfortable with basic Python or spreadsheets who want to work with data professionally.',
+    path: ['Python & Pandas', 'Cleaning data', 'Visualisation', 'Statistics & SQL', 'Insight report'],
+    links: [['Kaggle Learn: Python, Pandas, Data Viz, SQL (free)', 'https://www.kaggle.com/learn'], ['Google Data Analytics Certificate (Coursera)', 'https://www.coursera.org/professional-certificates/google-data-analytics'], ['IBM Data Science Professional Certificate (Coursera)', 'https://www.coursera.org/professional-certificates/ibm-data-science'], ['Pandas: Getting started (official docs)', 'https://pandas.pydata.org/docs/getting_started/index.html']] },
+  { title: 'Biotechnology & Genomics', icon: 'dna', grad: 'linear-gradient(135deg,#6c5ce7,#00b894)', level: 'Advanced', hours: '20 Hours',
+    overview: 'Explore how modern biology and technology work together. You will study DNA and gene expression, genome sequencing, CRISPR gene editing and bioinformatics, and see how these tools are changing medicine, agriculture and the environment.',
+    learn: ['DNA, RNA, proteins and gene regulation', 'Genome sequencing and how to read the data', 'Gene editing with CRISPR and its ethics', 'Bioinformatics tools and databases', 'Biotech in medicine, farming and industry', 'Reading and understanding scientific papers'],
+    advantages: ['Connects biology with data and computing', 'Looks at real-world cases such as vaccines and crop improvement', 'Builds scientific thinking and research skills', 'Includes the ethics and safety side of biotechnology'],
+    useful: 'Biotechnology drives new medicines, diagnostics, better crops and cleaner industry. Graduates can pursue roles in research labs, pharma, bioinformatics, agri-tech and healthcare, or continue to postgraduate study.',
+    who: 'Students with a school or college biology background who want to move into biotech or genomics.',
+    path: ['Molecular biology review', 'Sequencing & genomics', 'CRISPR & editing', 'Bioinformatics', 'Case study project'],
+    links: [['MIT OpenCourseWare: Fundamentals of Biology (free)', 'https://ocw.mit.edu/courses/7-01sc-fundamentals-of-biology-fall-2011/'], ['Khan Academy: Biology (free)', 'https://www.khanacademy.org/science/biology'], ['Genomic Data Science Specialization (Coursera)', 'https://www.coursera.org/specializations/genomic-data-science'], ['NHGRI Genomics Education (genome.gov)', 'https://www.genome.gov/education']] }
+];
+
+function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+let lastFocus = null;
+function openCourse(i) {
+  const c = COURSES[i]; if (!c) return;
+  lastFocus = document.activeElement;
+  const m = $('#courseModal');
+  $('#cmBanner').style.background = c.grad;
+  $('#cmIcon').className = 'fas fa-' + c.icon;
+  $('#cmMeta').textContent = `${c.level} · ${c.hours} · Online, self-paced`;
+  $('#cmTitle').textContent = c.title;
+  const list = a => '<ul>' + a.map(x => `<li>${esc(x)}</li>`).join('') + '</ul>';
+  $('#cmBody').innerHTML =
+    `<h4>About this course</h4><p>${esc(c.overview)}</p>` +
+    `<h4>What you will learn</h4>${list(c.learn)}` +
+    `<h4>Advantages</h4>${list(c.advantages)}` +
+    `<h4>Why it is useful</h4><p>${esc(c.useful)}</p>` +
+    `<h4>Who it is for</h4><p>${esc(c.who)}</p>` +
+    `<h4>Learning path</h4><ol class="cm-path">${c.path.map(x => `<li>${esc(x)}</li>`).join('')}</ol>` +
+    `<h4>Online course links</h4><div class="cm-links">${c.links.map(l => `<a href="${l[1]}" target="_blank" rel="noopener noreferrer"><i class="fas fa-play-circle"></i><span>${esc(l[0])}</span><em>Open ↗</em></a>`).join('')}</div>` +
+    `<p class="cm-note">These links open trusted third-party learning sites in a new tab. Free options are marked; some certificates may charge a fee.</p>`;
+  m.hidden = false; document.body.classList.add('modal-open');
+  $('#cmBox').scrollTop = 0; $('#cmClose').focus();
+}
+function closeCourse() {
+  const m = $('#courseModal'); if (m.hidden) return;
+  m.hidden = true; document.body.classList.remove('modal-open');
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+safe(() => {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = '<div class="cm-overlay" id="courseModal" hidden><div class="cm-box" id="cmBox" role="dialog" aria-modal="true" aria-labelledby="cmTitle" tabindex="-1"><button type="button" class="cm-close" id="cmClose" aria-label="Close course details">✕</button><div class="cm-banner" id="cmBanner"><i id="cmIcon" class="fas fa-book"></i></div><div class="cm-content"><p class="cm-meta" id="cmMeta"></p><h3 id="cmTitle"></h3><div id="cmBody"></div></div></div></div>';
+  document.body.appendChild(wrap.firstChild);
+  $('#cmClose').addEventListener('click', closeCourse);
+  $('#courseModal').addEventListener('click', e => { if (e.target.id === 'courseModal') closeCourse(); });
+  document.addEventListener('keydown', e => {
+    if ($('#courseModal').hidden) return;
+    if (e.key === 'Escape') closeCourse();
+    if (e.key === 'Tab') {
+      const f = $$('#cmBox a, #cmBox button').filter(x => x.offsetParent !== null); if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  $$('.course-card').forEach((card, i) => {
+    const title = $('h3', card).textContent.trim();
+    let idx = COURSES.findIndex(c => c.title.replace(/&amp;/g, '&') === title); if (idx < 0) idx = i;
+    card.setAttribute('role', 'button'); card.setAttribute('tabindex', '0'); card.setAttribute('aria-label', 'View details for ' + title);
+    card.style.cursor = 'pointer';
+    const btn = $('button', card); if (btn) btn.innerHTML = '<i class="fas fa-book-open"></i> View Course &amp; Links';
+    card.addEventListener('click', () => openCourse(idx));
+    card.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target === card) { e.preventDefault(); openCourse(idx); } });
+  });
+});
+
+/* Init — each step isolated so one failure can't break the rest */
+[initReveal, initParticles, initCounters, loadQuestion, updatePomodoroDisplay, startTestimonials].forEach(safe);
+
+const kf = document.createElement('style');
+kf.textContent = '@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+document.head.appendChild(kf);
+
+  </script>
+</body>
+</html>
